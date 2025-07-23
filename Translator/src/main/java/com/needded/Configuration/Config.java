@@ -1,6 +1,6 @@
 package com.needded.Configuration;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,15 +11,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class Config {
 
-    private static final String TOKEN;
-
-    static {
-        Dotenv dotenv = Dotenv.load();
-        TOKEN = dotenv.get("HUGGING_FACE_API_TOKEN");
-    }
+    private static String TOKEN;
 
     @Bean
     public WebClient huggingFaceWebClient() {
+
+        TOKEN = System.getenv("HUGGING_FACE_API_TOKEN");
+
         return WebClient.builder()
                 .baseUrl("https://api-inference.huggingface.co")
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)

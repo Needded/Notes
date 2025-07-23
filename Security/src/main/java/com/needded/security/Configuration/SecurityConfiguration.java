@@ -27,11 +27,11 @@ public class SecurityConfiguration {
                 )
                 .formLogin(login -> login
                         .loginPage("/auth/login")
-                        .defaultSuccessUrl("http://localhost:8081/home", true)
+                        .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/auth/login?logout")
                         .permitAll()
                 );
 
@@ -48,7 +48,5 @@ public class SecurityConfiguration {
             AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
-
-
 
 }

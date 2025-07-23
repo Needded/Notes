@@ -26,7 +26,7 @@ public class AuthController {
         return "login";
     }
 
-    @PostMapping("/register")
+    @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("user", new User());
         return "register";
@@ -35,6 +35,6 @@ public class AuthController {
     @PostMapping("/register-save")
     public String registerUser(@ModelAttribute User user) {
         customUserDetailsService.createUser(user);
-        return "redirect:/login";
+        return "redirect:/auth/login";
     }
 }

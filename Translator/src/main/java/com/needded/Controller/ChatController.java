@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/translator")
 public class ChatController {
 
-    private APIConsumption apiConsumption;
+    private final APIConsumption apiConsumption;
 
     public ChatController(APIConsumption apiConsumption) {
         this.apiConsumption = apiConsumption;

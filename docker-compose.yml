@@ -8,16 +8,28 @@ services:
     networks:
       - app-network
 
+  notes-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: studyHubNotes
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+
   notes-service:
     build:
       context: ./Notes
     ports:
       - "8083:8083"
     environment:
-      - SERVER_PORT=8081
+      - SERVER_PORT=8083
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     depends_on:
       - eureka-server
+      - notes-db
     networks:
       - app-network
 
@@ -27,7 +39,8 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - SERVER_PORT=8082
+      - HUGGING_FACE_API_TOKEN=${HUGGING_FACE_API_TOKEN}
+      - SERVER_PORT=8084
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     depends_on:
       - eureka-server
@@ -40,10 +53,21 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - SERVER_PORT=8083
+      - SERVER_PORT=8082
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     depends_on:
       - eureka-server
+    networks:
+      - app-network
+
+  security-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: studyHubUsers
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
     networks:
       - app-network
 
@@ -53,7 +77,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SERVER_PORT=8084
+      - SERVER_PORT=8081
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
     depends_on:
       - eureka-server
