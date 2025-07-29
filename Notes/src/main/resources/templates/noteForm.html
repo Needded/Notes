@@ -48,9 +48,25 @@
         button:hover {
             background-color: #45a049;
         }
+        .cancel-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: white;
+            background-color: #f44336;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .cancel-button:hover {
+            background-color: #d32f2f;
+        }
         .back-link {
             display: block;
-            margin-top: 10px;
+            margin-top: 15px;
             text-align: center;
             text-decoration: none;
             color: #333;
@@ -62,7 +78,6 @@
     <h2 th:text="${note.id == null} ? 'Add Note' : 'Edit Note'"></h2>
 
     <form th:action="@{/notes/save}" th:object="${note}" method="post">
-
         <input type="hidden" th:field="*{id}"/>
 
         <label>Title:</label>
@@ -72,11 +87,10 @@
         <textarea th:field="*{text}" required></textarea>
 
         <button type="submit">Save</button>
-        <a th:href="@{/notes}">Cancel</a>
-
+        <a th:href="@{/notes/view}" class="cancel-button">Cancel</a>
     </form>
 
-    <a class="back-link" th:href="@{/notes}">Back to Notes List</a>
+    <a class="back-link" th:href="@{/notes/view}">Back to Notes List</a>
 </div>
 </body>
 </html>

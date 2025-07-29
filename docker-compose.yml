@@ -4,7 +4,7 @@ services:
     build:
       context: ./EurekaServer
     ports:
-      - "8761:8761"
+      - "8761:8761"  # Open to register.
     networks:
       - app-network
 
@@ -22,8 +22,6 @@ services:
   notes-service:
     build:
       context: ./Notes
-    ports:
-      - "8083:8083"
     environment:
       - SERVER_PORT=8083
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
@@ -36,8 +34,6 @@ services:
   translator-service:
     build:
       context: ./Translator
-    ports:
-      - "8084:8084"
     environment:
       - HUGGING_FACE_API_TOKEN=${HUGGING_FACE_API_TOKEN}
       - SERVER_PORT=8084
@@ -51,7 +47,7 @@ services:
     build:
       context: ./Security
     ports:
-      - "8082:8082"
+      - "8080:8080" # Gateway + auth port
     environment:
       - SERVER_PORT=8082
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
@@ -74,8 +70,6 @@ services:
   main-service:
     build:
       context: ./Main
-    ports:
-      - "8081:8081"
     environment:
       - SERVER_PORT=8081
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka

@@ -15,11 +15,11 @@ public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column
-    String Title;
+    private String title;
 
     @Column
-    String text;
+    private String text;
 }

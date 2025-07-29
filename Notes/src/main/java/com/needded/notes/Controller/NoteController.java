@@ -38,7 +38,7 @@ public class NoteController {
             noteService.editNote(note.getId(), note);
         }
 
-        return "redirect:/notesPage";
+        return "redirect:/notes/view";
     }
     @GetMapping("/form")
     public String showForm(@RequestParam(required = false) Long id, Model model) {
@@ -59,6 +59,6 @@ public class NoteController {
 
         noteService.deleteNote(noteId);
 
-        return "redirect:/notesPage";
+        return "redirect:/notes/view";
     }
 }

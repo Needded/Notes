@@ -5,6 +5,7 @@ import com.needded.security.Repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,9 +14,11 @@ import java.util.ArrayList;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public void createUser(User user){
 
         try{
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         }catch (Exception e){
             System.out.println(e.getMessage());

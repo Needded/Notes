@@ -11,6 +11,24 @@
             justify-content: center;
             align-items: center;
             background: #f5f5f7;
+            position: relative;
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #555;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background 0.3s ease;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            background: #333;
         }
         .chat-container {
             background: white;
@@ -60,29 +78,27 @@
     </style>
 </head>
 <body>
+
+<a class="back-button" th:href="@{http://localhost:8081/}">Back to home</a>
+
 <div class="chat-container">
-    <form th:action="@{/ask}" method="post">
+    <form th:action="@{/translator/ask}" method="post">
         <textarea name="input" placeholder="Type your text here..." required
                   th:text="${input}"></textarea>
 
-        <!-- Choose language. -->
-        <select name="targetLang" required>
-            <option value="" disabled th:selected="${targetLang == null}">Choose target language</option>
-            <option value="pt" th:selected="${targetLang == 'pt'}">Portuguese (pt)</option>
-            <option value="en" th:selected="${targetLang == 'en'}">English (en)</option>
-            <option value="fr" th:selected="${targetLang == 'fr'}">French (fr)</option>
-            <option value="de" th:selected="${targetLang == 'de'}">German (de)</option>
-            <option value="es" th:selected="${targetLang == 'es'}">Spanish (es)</option>
-            <option value="it" th:selected="${targetLang == 'it'}">Italian (it)</option>
-        </select>
+        <!--        <select name="targetLang" required>-->
+        <!--            <option value="" disabled th:selected="${targetLang == null}">Choose target language</option>-->
+        <!--            <option value="pt" th:selected="${targetLang == 'pt'}">Portuguese (pt)</option>-->
+        <!--            <option value="en" th:selected="${targetLang == 'en'}">English (en)</option>-->
+        <!--            <option value="fr" th:selected="${targetLang == 'fr'}">French (fr)</option>-->
+        <!--            <option value="de" th:selected="${targetLang == 'de'}">German (de)</option>-->
+        <!--            <option value="es" th:selected="${targetLang == 'es'}">Spanish (es)</option>-->
+        <!--            <option value="it" th:selected="${targetLang == 'it'}">Italian (it)</option>-->
+        <!--        </select>-->
 
         <button type="submit">Translate</button>
     </form>
-
-    <div th:if="${result}" class="response">
-        <strong>Result:</strong><br/>
-        <span th:text="${result}"></span>
-    </div>
 </div>
+
 </body>
 </html>

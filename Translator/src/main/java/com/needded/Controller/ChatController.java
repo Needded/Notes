@@ -22,7 +22,7 @@ public class ChatController {
         this.apiConsumption = apiConsumption;
     }
 
-    @GetMapping("view")
+    @GetMapping("/view")
     public String translatorPage(){
         return "chat";
     }
