@@ -1,6 +1,6 @@
-package com.needded.security.Configuration;
+package com.needded.main.Configuration;
 
-import com.needded.security.Service.CustomUserDetailsService;
+import com.needded.main.Service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +30,8 @@ public class SecurityConfiguration {
                 )
                 .formLogin(login -> login
                         .loginPage("/auth/login")
-                        .defaultSuccessUrl("localhost:8081/home", true)
+                        .loginProcessingUrl("/auth/loginForm")
+                        .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
                 .logout(logout -> logout

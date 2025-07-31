@@ -64,7 +64,7 @@
 <div class="container">
     <h2>Register</h2>
 
-    <form th:action="@{/auth/register-save}" method="post" th:object="${user}">
+    <form th:action="@{/auth/registerForm}" method="post" th:object="${user}">
         <input type="text" th:field="*{username}" placeholder="Username" required />
         <input type="password" th:field="*{password}" placeholder="Password" required />
         <button type="submit">Register</button>

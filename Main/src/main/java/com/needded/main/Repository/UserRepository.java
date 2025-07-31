@@ -1,6 +1,6 @@
-package com.needded.security.Repository;
+package com.needded.main.Repository;
 
-import com.needded.security.Entity.User;
+import com.needded.main.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

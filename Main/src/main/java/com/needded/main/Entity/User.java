@@ -1,4 +1,4 @@
-package com.needded.security.Entity;
+package com.needded.main.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
