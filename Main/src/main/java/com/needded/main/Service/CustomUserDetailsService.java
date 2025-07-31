@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -34,12 +35,20 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public void createUser(User user){
 
+        if(usernameExists(user.getUsername())) throw new RuntimeException("Username: "+ user.getUsername()+" already exist on database.");
+
         try{
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
+            System.out.println("User created.");
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error creating user: " + e.getMessage(), e);
         }
 
+    }
+
+    public boolean usernameExists(String username){
+        Optional<User> user=userRepository.findByUsername(username);
+        return user.isPresent();
     }
 }
