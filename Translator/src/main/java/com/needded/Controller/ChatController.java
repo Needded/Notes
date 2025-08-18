@@ -1,18 +1,12 @@
 package com.needded.Controller;
-import com.needded.Model.TranslationResponse;
+
+import com.needded.Model.AskDTO;
 import com.needded.Service.APIConsumption;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Map;
-
-@Controller
+@RestController
 @RequestMapping("/translator")
 public class ChatController {
 
@@ -22,19 +16,11 @@ public class ChatController {
         this.apiConsumption = apiConsumption;
     }
 
-    @GetMapping("/view")
-    public String translatorPage(){
-        return "chat";
-    }
-
     @PostMapping("/ask")
-    public String askQuestion(@RequestParam String input, Model model) {
+    public ResponseEntity<String> askQuestion(@RequestBody AskDTO askDTO) {
 
-        String textTranslated = apiConsumption.translateText(input);
+        String textTranslated = apiConsumption.translateText(askDTO.toString());
 
-        model.addAttribute("input", input);
-        model.addAttribute("result", textTranslated);
-
-        return "chat";
+        return ResponseEntity.ok(textTranslated);
     }
 }

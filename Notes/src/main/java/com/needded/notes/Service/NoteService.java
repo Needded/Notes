@@ -24,34 +24,38 @@ public class NoteService {
         }
     }
 
-    public void createNote(Note note){
+    public Note createNote(Note note){
         try {
-            noteRepository.save(note);
+            return noteRepository.save(note);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return null;
     }
 
-    public void editNote(Long noteId, Note note){
+    public Note editNote(Long noteId, Note note){
         try {
             Note noteToUpdate = noteRepository.findById(noteId)
                     .orElseThrow(RuntimeException::new);
 
             noteToUpdate.setText(note.getText());
-            noteRepository.save(noteToUpdate);
+            return noteRepository.save(noteToUpdate);
 
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
+        return null;
     }
 
-    public void deleteNote(Long noteId){
+    public boolean deleteNote(Long noteId){
         try {
             noteRepository.deleteById(noteId);
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return false;
     }
 
     public Optional<Note> getNoteById(Long noteId) {
@@ -60,6 +64,6 @@ public class NoteService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 }

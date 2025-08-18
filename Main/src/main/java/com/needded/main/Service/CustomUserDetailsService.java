@@ -3,6 +3,8 @@ package com.needded.main.Service;
 import com.needded.main.Entity.User;
 import com.needded.main.Repository.UserRepository;
 import com.needded.main.Repository.UserRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

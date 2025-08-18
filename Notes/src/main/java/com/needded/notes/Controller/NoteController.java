@@ -2,13 +2,13 @@ package com.needded.notes.Controller;
 
 import com.needded.notes.Entity.Note;
 import com.needded.notes.Service.NoteService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/notes")
 public class NoteController {
 
@@ -18,47 +18,30 @@ public class NoteController {
         this.noteService = noteService;
     }
 
-
-    @GetMapping("/view")
-    public String getAllNotes (Model model){
-
-        List<Note> notesList=noteService.getAllNotes();
-
-        model.addAttribute("notes", notesList);
-
-        return "notesPage";
+    @GetMapping
+    public ResponseEntity<List<Note>> getAllNotes() {
+        return ResponseEntity.ok(noteService.getAllNotes());
     }
 
-    @PostMapping("/save")
-    public String saveNote(@ModelAttribute Note note) {
-
+    @PostMapping
+    public ResponseEntity<Note> saveNote(@RequestBody Note note) {
+        Note saved;
         if (note.getId() == null) {
-            noteService.createNote(note);
+            saved = noteService.createNote(note);
         } else {
-            noteService.editNote(note.getId(), note);
+            saved = noteService.editNote(note.getId(), note);
         }
-
-        return "redirect:/notes/view";
+        return ResponseEntity.ok(saved);
     }
-    @GetMapping("/form")
-    public String showForm(@RequestParam(required = false) Long id, Model model) {
 
-        Note note;
-        if (id != null) {
-            note = noteService.getNoteById(id).orElse(new Note());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteNote(@PathVariable Long id){
+        boolean deleted = noteService.deleteNote(id);
+        if (deleted) {
+            return ResponseEntity.ok("Note deleted!");
         } else {
-            note = new Note();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note not found!");
         }
-        model.addAttribute("note", note);
-        return "noteForm";
     }
 
-
-    @DeleteMapping("/delete/{noteId}")
-    public String deleteNote (@PathVariable Long noteId){
-
-        noteService.deleteNote(noteId);
-
-        return "redirect:/notes/view";
-    }
 }

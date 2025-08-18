@@ -1,44 +1,67 @@
 package com.needded.main.Controller;
 
+import com.needded.main.Service.JWTService;
+import com.needded.main.Entity.UserDTO;
+import com.needded.main.Entity.TokenResponse;
 import com.needded.main.Entity.User;
 import com.needded.main.Service.CustomUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class MainPageController {
 
-    private final CustomUserDetailsService customUserDetailsService;
     private static final Logger logger = LoggerFactory.getLogger(MainPageController.class);
+    private final CustomUserDetailsService customUserDetailsService;
+    private JWTService jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public MainPageController(CustomUserDetailsService customUserDetailsService) {
+    public MainPageController(CustomUserDetailsService customUserDetailsService, JWTService jwtUtil, AuthenticationManager authenticationManager) {
         this.customUserDetailsService = customUserDetailsService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
-    @GetMapping("/home")
-    public String home(){
-        return "home";
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponse> login(@RequestBody UserDTO userDTO) {
+        logger.info("Logging user...");
+
+        //Authenticate teh user. If invalid, throw exception.
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.username(), userDTO.password()));
+
+        //Create the JWT token.
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        String token = jwtUtil.generateToken(userDetails.getUsername());
+
+        //Return 200 and the JWT token.
+        return ResponseEntity.ok(new TokenResponse(token));
     }
 
-    @GetMapping("/auth/login")
-    public String login() {
-        return "loginPage";
-    }
 
-    @GetMapping("/auth/register")
-    public String register(Model model) {
-        logger.info("register page.");
-        model.addAttribute("user", new User());
-        return "register";
-    }
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+        logger.info("Registering user...");
 
-    @PostMapping("/auth/registerForm")
-    public String registerForm(@ModelAttribute User user) {
-        logger.info("registering...");
+        if (customUserDetailsService.usernameExists(userDTO.username())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists!");
+        }
+
+        //Convert DTO to User and register on Service layer.
+        User user = new User();
+        user.setUsername(userDTO.username());
+        user.setPassword(userDTO.password());
         customUserDetailsService.createUser(user);
-        return "redirect:/auth/login";
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("User register successfully!");
+
     }
+
 }
