@@ -1,10 +1,11 @@
 package com.needded.main.Controller;
 
-import com.needded.main.Service.JWTService;
+import com.needded.main.Security.MainJWTService;
 import com.needded.main.Entity.UserDTO;
 import com.needded.main.Entity.TokenResponse;
 import com.needded.main.Entity.User;
 import com.needded.main.Service.CustomUserDetailsService;
+import com.needded.main.Service.MainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class MainPageController {
 
     private static final Logger logger = LoggerFactory.getLogger(MainPageController.class);
-    private final CustomUserDetailsService customUserDetailsService;
-    private JWTService jwtUtil;
+    private final MainService mainService;
+    private final MainJWTService jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    public MainPageController(CustomUserDetailsService customUserDetailsService, JWTService jwtUtil, AuthenticationManager authenticationManager) {
-        this.customUserDetailsService = customUserDetailsService;
+    public MainPageController(MainService mainService, MainJWTService jwtUtil, AuthenticationManager authenticationManager) {
+        this.mainService = mainService;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
     }
@@ -49,7 +50,7 @@ public class MainPageController {
     public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
         logger.info("Registering user...");
 
-        if (customUserDetailsService.usernameExists(userDTO.username())) {
+        if (!mainService.usernameExists(userDTO.username())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists!");
         }
 
@@ -57,7 +58,7 @@ public class MainPageController {
         User user = new User();
         user.setUsername(userDTO.username());
         user.setPassword(userDTO.password());
-        customUserDetailsService.createUser(user);
+        mainService.createUser(user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("User register successfully!");

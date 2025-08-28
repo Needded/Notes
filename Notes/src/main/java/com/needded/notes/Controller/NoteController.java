@@ -2,6 +2,7 @@ package com.needded.notes.Controller;
 
 import com.needded.notes.Entity.Note;
 import com.needded.notes.Service.NoteService;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class NoteController {
         this.noteService = noteService;
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<Note>> getAllNotes() {
         return ResponseEntity.ok(noteService.getAllNotes());
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<Note> saveNote(@RequestBody Note note) {
         Note saved;
         if (note.getId() == null) {
@@ -34,7 +35,7 @@ public class NoteController {
         return ResponseEntity.ok(saved);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteNote(@PathVariable Long id){
         boolean deleted = noteService.deleteNote(id);
         if (deleted) {

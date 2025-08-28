@@ -1,6 +1,5 @@
-package com.needded.Security;
+package com.needded.main.Security;
 
-import com.needded.Service.TranslatorJWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,12 +12,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * Class responsible to create a filter that will validate the JwtToken.
+ * */
 @Component
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class MainJwtAuthFilter extends OncePerRequestFilter {
 
-    private final TranslatorJWTService jwtService;
+    private final MainJWTService jwtService;
 
-    public JwtAuthFilter(TranslatorJWTService jwtService) {
+    public MainJwtAuthFilter(MainJWTService jwtService) {
         this.jwtService = jwtService;
     }
 
@@ -26,6 +28,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        // Ignores login and register.
+        if (path.equals("/login") || path.equals("/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         final String authHeader = request.getHeader("Authorization");
 
@@ -45,4 +55,3 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-

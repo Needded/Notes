@@ -1,6 +1,5 @@
 package com.needded.notes.Security;
 
-import com.needded.notes.Service.NotesJWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

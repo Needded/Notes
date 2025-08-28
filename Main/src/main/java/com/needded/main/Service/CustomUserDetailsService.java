@@ -14,15 +14,16 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+* Class responsible to get user from DB and then inject on Spring to be Authenticated by the Authentication provider.
+* */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,24 +34,5 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), new ArrayList<>());
-    }
-
-    public void createUser(User user){
-
-        if(usernameExists(user.getUsername())) throw new RuntimeException("Username: "+ user.getUsername()+" already exist on database.");
-
-        try{
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-            System.out.println("User created.");
-        }catch (Exception e){
-            throw new RuntimeException("Error creating user: " + e.getMessage(), e);
-        }
-
-    }
-
-    public boolean usernameExists(String username){
-        Optional<User> user=userRepository.findByUsername(username);
-        return user.isPresent();
     }
 }

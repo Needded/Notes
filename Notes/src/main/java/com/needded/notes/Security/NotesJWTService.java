@@ -1,17 +1,20 @@
-package com.needded.Service;
+package com.needded.notes.Security;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 
-public class TranslatorJWTService {
+@Service
+public class NotesJWTService {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
