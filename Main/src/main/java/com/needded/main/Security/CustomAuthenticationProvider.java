@@ -34,7 +34,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Invalid password.");
         }
 
+<<<<<<< HEAD
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+=======
+        return new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities());
+>>>>>>> ed0a9a9 (JWT auth2 working fine.)
     }
 
     @Override

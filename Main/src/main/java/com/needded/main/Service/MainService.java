@@ -20,7 +20,12 @@ public class MainService {
 
     public void createUser(User user){
 
+<<<<<<< HEAD
         if(usernameExists(user.getUsername())) throw new RuntimeException("Username: "+ user.getUsername()+" already exist on database.");
+=======
+        if(usernameExists(user.getUsername())) throw new RuntimeException("Username: '"+ user.getUsername()+"'" +
+                " already exist on database.");
+>>>>>>> ed0a9a9 (JWT auth2 working fine.)
 
         try{
             user.setPassword(passwordEncoder.encode(user.getPassword()));
