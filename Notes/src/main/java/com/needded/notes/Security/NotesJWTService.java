@@ -1,5 +1,6 @@
 package com.needded.notes.Security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -14,6 +15,16 @@ public class NotesJWTService {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
+    public String extractUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
 
 
     public String extractUsername(String token) {

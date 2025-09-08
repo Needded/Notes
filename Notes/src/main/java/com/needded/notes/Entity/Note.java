@@ -23,4 +23,7 @@ public class Note {
 
     @Column
     private String text;
+
+    @Column
+    private String userId;
 }

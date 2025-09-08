@@ -6,6 +6,7 @@ import com.needded.main.Entity.TokenResponse;
 import com.needded.main.Entity.User;
 import com.needded.main.Service.CustomUserDetailsService;
 import com.needded.main.Service.MainService;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class MainPageController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<TokenResponse> login(@NonNull  @RequestBody UserDTO userDTO) {
         logger.info("Logging user...");
 
         //Authenticate teh user. If invalid, throw exception.
@@ -47,10 +48,10 @@ public class MainPageController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> register(@NonNull @RequestBody UserDTO userDTO) {
         logger.info("Registering user...");
 
-        if (!mainService.usernameExists(userDTO.username())) {
+        if (mainService.usernameExists(userDTO.username())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists!");
         }
 

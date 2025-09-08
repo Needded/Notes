@@ -2,6 +2,9 @@ package com.needded.notes.Service;
 
 import com.needded.notes.Entity.Note;
 import com.needded.notes.Repository.NoteRepository;
+import com.needded.notes.Security.NotesJWTService;
+import lombok.NonNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,20 +14,15 @@ import java.util.Optional;
 public class NoteService {
 
     private final NoteRepository noteRepository;
+    private final NotesJWTService notesJWTService;
 
-    public NoteService(NoteRepository noteRepository) {
+    public NoteService(NoteRepository noteRepository, NotesJWTService notesJWTService) {
         this.noteRepository = noteRepository;
+        this.notesJWTService = notesJWTService;
     }
 
-    public List<Note> getAllNotes() {
-        try{
-            return noteRepository.findAll();
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public Note createNote(Note note){
+    public Note createNote(@NonNull Note note){
         try {
             return noteRepository.save(note);
 
@@ -34,7 +32,7 @@ public class NoteService {
         return null;
     }
 
-    public Note editNote(Long noteId, Note note){
+    public Note editNote(@NonNull Long noteId, @NonNull Note note){
         try {
             Note noteToUpdate = noteRepository.findById(noteId)
                     .orElseThrow(RuntimeException::new);
@@ -48,9 +46,9 @@ public class NoteService {
         return null;
     }
 
-    public boolean deleteNote(Long noteId){
+    public boolean deleteNote(@NonNull Long noteId, @NonNull String userId){
         try {
-            noteRepository.deleteById(noteId);
+            noteRepository.deleteNoteByIdAndUserId(noteId, userId);
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -58,12 +56,27 @@ public class NoteService {
         return false;
     }
 
-    public Optional<Note> getNoteById(Long noteId) {
+    public Note getNoteByIdAndUserId(@NonNull Long noteId, String userId) {
         try {
-            return noteRepository.findById(noteId);
+            return noteRepository.findNoteByIdAndUserId(noteId, userId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return Optional.empty();
+        return null;
+    }
+
+    public List<Note> findAllByUserId(@NonNull String userId) {
+        try {
+            return noteRepository.findAllNotesByUserId(userId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return List.of();
+    }
+
+    public String extractUserId (@NonNull String headerToken){
+        String token = headerToken.substring(7); // remove "Bearer "
+
+        return notesJWTService.extractUserId(token);
     }
 }

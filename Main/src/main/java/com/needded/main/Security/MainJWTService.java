@@ -18,11 +18,7 @@ import java.util.Date;
 public class MainJWTService {
 
     @Value("${jwt.secret}")
-<<<<<<< HEAD
-    private static String secretKey;
-=======
     private String secretKey;
->>>>>>> ed0a9a9 (JWT auth2 working fine.)
 
     // 1 Hour token lifetime.
     private final long EXPIRATION_TIME = 1000 * 60 * 60;
