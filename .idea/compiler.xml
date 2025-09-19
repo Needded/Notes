@@ -19,8 +19,18 @@
         <module name="Translator" />
         <module name="notes" />
       </profile>
+      <profile name="Annotation profile for Files" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+        </processorPath>
+        <module name="files" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Files" target="21" />
       <module name="security" target="17" />
     </bytecodeTargetLevel>
   </component>
@@ -28,6 +38,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="EurekaServer" options="-parameters" />
       <module name="Translator" options="-parameters" />
+      <module name="files" options="-parameters" />
       <module name="main" options="-parameters" />
       <module name="notes" options="-parameters" />
       <module name="security" options="-parameters" />
