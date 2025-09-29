@@ -1,6 +1,8 @@
 package com.needded.notes.Controller;
 
 import com.needded.notes.Entity.Note;
+import com.needded.notes.Entity.NoteDTO;
+import com.needded.notes.Entity.NoteMapper;
 import com.needded.notes.Service.NoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,7 @@ public class NoteController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Note>> getAllNotes(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<List<NoteDTO>> getAllNotes(@RequestHeader("Authorization") String authHeader) {
         String userId = noteService.extractUserId(authHeader);
 
         logger.info("Getting all notes...");
@@ -30,41 +32,53 @@ public class NoteController {
 
 
         List <Note> notes= noteService.findAllByUserId(userId);
+        List <NoteDTO> noteDTO= notes
+                .stream()
+                .map(NoteMapper::noteToDTO)
+                .toList();
 
-        return ResponseEntity.ok(notes);
+        return ResponseEntity.ok(noteDTO);
     }
 
     @GetMapping("/getNoteById/{noteId}")
-    public ResponseEntity<Note> getNoteById(@PathVariable Long noteId, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<NoteDTO> getNoteById(@PathVariable Long noteId, @RequestHeader("Authorization") String authHeader) {
         String userId = noteService.extractUserId(authHeader);
 
         logger.info("Getting note with id: {}", noteId);
         logger.info("User id: {}",userId);
 
         Note note= noteService.getNoteByIdAndUserId(noteId, userId);
+        NoteDTO noteDTO=NoteMapper.noteToDTO(note);
 
-        return ResponseEntity.ok(note);
+        return ResponseEntity.ok(noteDTO);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Note> saveNote(@RequestHeader("Authorization") String authHeader, @RequestBody Note note) {
+    public ResponseEntity<NoteDTO> saveNote(@RequestHeader("Authorization") String authHeader, @RequestBody NoteDTO noteDTO) {
         String userId = noteService.extractUserId(authHeader);
 
         logger.info("Saving note...");
         logger.info("User id: {}",userId);
 
+        Note toSave = NoteMapper.DTOtoNote(noteDTO,userId);
+        Note saved = noteService.createNote(toSave);
+        NoteDTO response= NoteMapper.noteToDTO(saved);
 
-        note.setUserId(userId);
-        Note saved;
+        return ResponseEntity.ok(response);
+    }
 
-        if (note.getId() == null) {
-            saved = noteService.createNote(note);
-        } else {
-            saved = noteService.editNote(note.getId(), note);
-        }
+    @PutMapping("/update/{noteId}")
+    public ResponseEntity<NoteDTO> updateNote(@RequestHeader("Authorization") String authHeader,@PathVariable Long noteId, @RequestBody NoteDTO noteDTO) {
+        String userId = noteService.extractUserId(authHeader);
 
+        logger.info("Updating note...");
+        logger.info("User id: {}",userId);
 
-        return ResponseEntity.ok(saved);
+        Note toUpdate=NoteMapper.DTOtoNote(noteDTO,userId);
+        Note updated=noteService.editNote(noteId,toUpdate);
+        NoteDTO response=NoteMapper.noteToDTO(updated);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete/{id}")

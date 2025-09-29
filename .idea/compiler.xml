@@ -19,17 +19,9 @@
         <module name="Translator" />
         <module name="notes" />
       </profile>
-      <profile name="Annotation profile for Files" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
-        </processorPath>
-        <module name="files" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="files" target="17" />
       <module name="Files" target="21" />
       <module name="security" target="17" />
     </bytecodeTargetLevel>

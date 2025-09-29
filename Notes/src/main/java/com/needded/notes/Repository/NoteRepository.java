@@ -16,5 +16,5 @@ public interface NoteRepository extends JpaRepository<Note,Long> {
     Note findNoteByIdAndUserId (Long id, String userId);
 
     //Delete note with the given id and userId.
-    void deleteNoteByIdAndUserId (Long id, String userId);
+    void deleteNoteByIdAndUserId (Long noteId, String userId);
 }

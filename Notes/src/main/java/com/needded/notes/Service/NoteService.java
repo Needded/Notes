@@ -37,6 +37,7 @@ public class NoteService {
             Note noteToUpdate = noteRepository.findById(noteId)
                     .orElseThrow(RuntimeException::new);
 
+            noteToUpdate.setTitle(note.getTitle());
             noteToUpdate.setText(note.getText());
             return noteRepository.save(noteToUpdate);
 
