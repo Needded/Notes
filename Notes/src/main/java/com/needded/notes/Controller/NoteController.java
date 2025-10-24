@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/notes")
 public class NoteController {
 
-    private static final Logger logger= LoggerFactory.getLogger(NoteController.class);
+    private final Logger logger= LoggerFactory.getLogger(NoteController.class);
     private final NoteService noteService;
 
     public NoteController(NoteService noteService) {
@@ -75,7 +75,7 @@ public class NoteController {
         logger.info("User id: {}",userId);
 
         Note toUpdate=NoteMapper.DTOtoNote(noteDTO,userId);
-        Note updated=noteService.editNote(noteId,toUpdate);
+        Note updated=noteService.editNote(noteId,toUpdate,userId);
         NoteDTO response=NoteMapper.noteToDTO(updated);
 
         return ResponseEntity.ok(response);
